@@ -1,0 +1,122 @@
+---
+
+PROMPT ULTRA COMPLETO — PLATAFORMA DE SERVIÇOS DE RESTAURAÇÃO DE IMAGENS (SaaS/OPERACIONAL)
+VERSÃO ENTERPRISE / FOCO EM SEGURANÇA E AUTOMAÇÃO FINANCEIRA
+
+---
+
+## 1 - VISÃO GERAL DO PRODUTO
+
+Crie uma plataforma robusta para prestação de serviços de restauração de imagens, focada na automação do fluxo de trabalho entre o upload do cliente, a entrega do profissional e a liberação financeira automática. O sistema deve ser projetado para uso profissional real, com foco em segurança máxima, integridade de arquivos pessoais, controle financeiro rigoroso e experiência de usuário fluida.
+
+A plataforma não é um simples portfólio; é uma ferramenta operacional onde o núcleo do valor reside na custódia segura das imagens restauradas, que só são liberadas para download mediante a confirmação de pagamento via API bancária.
+
+---
+
+## 2 - OBJETIVO PRINCIPAL E FLUXO DE TRABALHO
+
+Construir uma aplicação segura e escalável que gerencie o seguinte ciclo de vida:
+- **Upload Seguro:** Cliente envia imagens originais (danificadas).
+- **Gestão de Pedidos:** O administrador (restaurador) visualiza os pedidos e faz o download para trabalho offline.
+- **Entrega de Prévia:** O sistema permite o upload da versão restaurada (com marca d'água automática ou proteção de visualização).
+- **Pagamento Automatizado:** Integração com Gateway de Pagamento (Pix/Cartão) com webhook de confirmação.
+- **Liberação Instantânea:** Assim que o banco confirma o recebimento, o sistema libera o link de download da imagem em alta resolução.
+
+A solução deve equilibrar:
+- **Segurança Transacional Máxima:** Proteção contra manipulação de status de pagamento.
+- **Privacidade de Dados:** Imagens de clientes são tratadas como dados sensíveis.
+- **Praticidade Operacional:** Painel administrativo focado na gestão de fila de trabalho.
+
+---
+
+## 3 - PRINCÍPIOS OBRIGATÓRIOS DO PROJETO
+
+- 1. **Segurança e Consistência:** O download nunca deve ser liberado sem o status "PAID" confirmado via Webhook assinado.
+- 2. **Isolamento de Arquivos:** Imagens originais e restauradas devem estar em diretórios protegidos (não públicos).
+- 3. **Checkout Otimizado:** Processo de pagamento com o mínimo de cliques possível.
+- 4. **Regras no Backend:** Cálculos de preços, validação de arquivos e verificação de status financeiros exclusivamente no servidor.
+- 5. **Alta Observabilidade:** Logs detalhados de quem acessou qual imagem e quando.
+- 6. **Interface Profissional:** Design limpo que transmita confiança para lidar com fotos de família e memórias.
+
+---
+
+## 4 - TECNOLOGIAS OBRIGATÓRIAS
+
+**BACKEND:**
+- Java 21 LTS
+- Spring Boot 3.x
+- Spring Security (Autenticação e Autorização rigorosa)
+- Spring Data JPA
+- Hibernate
+- Flyway (Versionamento de banco de dados)
+- Maven ou Gradle
+- JUnit + Mockito (Foco em testes de fluxo financeiro)
+- Redis (Para cache de sessões e rate limit de uploads)
+- RabbitMQ ou Kafka (Para processamento assíncrono de notificações e redimensionamento de imagens)
+
+**FRONTEND:**
+- React + TypeScript
+- Next.js (SSR para a Landing Page e área institucional - SEO)
+- Vite (Para o Painel Administrativo e Painel do Cliente)
+- TanStack Query (Gerenciamento de estado de pedidos)
+- Tailwind CSS
+- React Hook Form + Zod (Validação rigorosa de formulários)
+
+**BANCO DE DADOS:**
+- PostgreSQL (ACID compliance para transações financeiras)
+
+**INFRAESTRUTURA E SEGURANÇA:**
+- Docker & Docker Compose
+- Nginx (Reverse Proxy)
+- HTTPS obrigatório (TLS 1.3)
+- CI/CD (GitHub Actions ou similar)
+
+**ARMAZENAMENTO DE ARQUIVOS (CRÍTICO):**
+- **Privado:** AWS S3, Cloudflare R2 ou MinIO. 
+- Os links de download devem ser pré-assinados (Presigned URLs) com tempo de expiração curto (ex: 15 minutos).
+
+---
+
+## 5 - PADRÃO ARQUITETURAL
+
+O sistema será um **MONÓLITO MODULAR**.
+- Separação clara entre o módulo de **Clientes** (Upload/Pagamento) e o módulo de **Administração** (Gestão de Restaurações).
+- **Camadas:** API/Controllers, Services/Use Cases, Domínio (Regras de Negócio), Persistência e Integrações Externas (Gateway de Pagamento).
+
+---
+
+## 6 - MODELO DE NEGÓCIO E FINANÇAS
+
+- **Precificação:** Por imagem ou pacotes de imagens.
+- **Integração Bancária:** Uso de Gateways como Stripe, Mercado Pago ou Juno/Efi (Foco em Pix e confirmação imediata).
+- **Fluxo Financeiro:** O sistema deve ouvir Webhooks do banco, validar a autenticidade da requisição e atualizar o status do pedido para "Liberado".
+
+---
+
+## 7 - SEGURANÇA E PRIVACIDADE (DIRETRIZES MÁXIMAS)
+
+- **Proteção de Mídia:** Nenhuma imagem deve ser acessível via URL direta. O acesso deve passar por um filtro de autorização que verifica se o usuário logado é o dono do pedido ou o admin.
+- **Prevenção de Fraude:** Proteção contra manipulação de IDs de pedidos (IDOR).
+- **Integridade de Pagamento:** O sistema deve re-consultar a API do banco antes de liberar o download, não confiando apenas no payload do frontend.
+- **LGPD:** Criptografia de dados pessoais e política de retenção de imagens (ex: apagar fotos 30 dias após a entrega).
+
+---
+
+## 8 - REQUISITOS OPERACIONAIS (Dono do Site)
+
+- Dashboard com "Fila de Trabalho" (Pedidos pendentes, Em andamento, Aguardando Pagamento, Finalizados).
+- Sistema de upload de "Provas": Upload de imagem com marca d'água automática para o cliente aprovar o serviço.
+- Histórico de faturamento e exportação de relatórios.
+
+---
+
+## 9 - MÓDULOS DO SISTEMA
+
+- 1. **Autenticação:** Login seguro para Clientes e Admin (BCrypt, JWT com expiração curta).
+- 2. **Módulo de Upload:** Validação de tipo de arquivo, tamanho e integridade.
+- 3. **Gestão de Pedidos (OMS):** Fluxo de estados (Aguardando Analise -> Em Restauração -> Pronto para Pagamento -> Pago/Liberado).
+- 4. **Integração Financeira:** Checkout transparente e tratamento de Webhooks.
+- 5. **Módulo de Entrega:** Geração de links seguros e temporários para download.
+- 6. **Notificações:** E-mail automático quando a foto estiver pronta e quando o pagamento for confirmado.
+- 7. **Auditoria:** Log de todas as transações financeiras e downloads realizados.
+- 8. **Configurações:** Definição de preços, prazos médios e mensagens automáticas.
