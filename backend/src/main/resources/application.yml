@@ -51,3 +51,7 @@ s3:
   access-key: admin
   secret-key: password123
   bucket-name: restaurador-images
+
+mercadopago:
+  access-token: APP_USR-mock-access-token-123456
+  webhook-secret: mock-webhook-secret-123456

@@ -28,6 +28,12 @@ public class ImageOrder {
     @Column(nullable = false)
     private OrderStatus status;
 
+    @Column(precision = 10, scale = 2)
+    private java.math.BigDecimal price;
+
+    @Column(name = "external_payment_id")
+    private String externalPaymentId;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -50,4 +56,8 @@ public class ImageOrder {
     public String getStoragePath() { return storagePath; }
     public OrderStatus getStatus() { return status; }
     public void setStatus(OrderStatus status) { this.status = status; }
+    public java.math.BigDecimal getPrice() { return price; }
+    public void setPrice(java.math.BigDecimal price) { this.price = price; }
+    public String getExternalPaymentId() { return externalPaymentId; }
+    public void setExternalPaymentId(String externalPaymentId) { this.externalPaymentId = externalPaymentId; }
 }
