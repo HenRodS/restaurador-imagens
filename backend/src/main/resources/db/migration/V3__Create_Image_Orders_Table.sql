@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS image_orders (
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL,
+    original_filename VARCHAR(255) NOT NULL,
+    storage_path VARCHAR(255) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

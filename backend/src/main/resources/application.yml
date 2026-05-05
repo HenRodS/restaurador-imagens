@@ -39,3 +39,15 @@ server:
 jwt:
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
   expiration: 86400000 # 1 dia
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 25MB
+
+s3:
+  endpoint: http://localhost:9000
+  access-key: admin
+  secret-key: password123
+  bucket-name: restaurador-images
