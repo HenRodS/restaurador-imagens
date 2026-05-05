@@ -21,12 +21,14 @@ import java.util.UUID;
 public class WebhookController {
 
     private final ImageOrderRepository repository;
+    private final NotificationProducer notificationProducer;
 
     @Value("${mercadopago.access-token}")
     private String accessToken;
 
-    public WebhookController(ImageOrderRepository repository) {
+    public WebhookController(ImageOrderRepository repository, NotificationProducer notificationProducer) {
         this.repository = repository;
+        this.notificationProducer = notificationProducer;
     }
 
     @PostMapping("/payments")
@@ -53,6 +55,11 @@ public class WebhookController {
                                 ImageOrder order = optionalOrder.get();
                                 order.setStatus(OrderStatus.PAID);
                                 repository.save(order);
+
+                                String subject = "Pagamento Confirmado - Imagem Liberada";
+                                String body = "Obrigado! O pagamento para a foto " + order.getOriginalFilename() + " foi confirmado.\n" +
+                                              "Acesse o painel para realizar o download da imagem em alta resolução.";
+                                notificationProducer.sendEmailNotification(order.getUser().getEmail(), subject, body);
                             }
                         }
                     }

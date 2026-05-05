@@ -55,3 +55,21 @@ s3:
 mercadopago:
   access-token: APP_USR-mock-access-token-123456
   webhook-secret: mock-webhook-secret-123456
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  mail:
+    host: localhost
+    port: 1025 # Porta padrão do MailHog/Mailtrap local mock
+    username: mock
+    password: mock
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false

@@ -17,9 +17,11 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final ImageOrderRepository repository;
+    private final NotificationProducer notificationProducer;
 
-    public OrderService(ImageOrderRepository repository) {
+    public OrderService(ImageOrderRepository repository, NotificationProducer notificationProducer) {
         this.repository = repository;
+        this.notificationProducer = notificationProducer;
     }
 
     public List<OrderResponse> getOrdersForUser(User user) {
@@ -46,6 +48,13 @@ public class OrderService {
         order.setStatus(request.getStatus());
         ImageOrder updatedOrder = repository.save(order);
         
+        if (request.getStatus() == OrderStatus.AWAITING_PAYMENT) {
+            String subject = "Sua foto restaurada está pronta!";
+            String body = "Sua foto " + order.getOriginalFilename() + " já foi restaurada.\n" +
+                          "Acesse o painel para realizar o pagamento e liberar o download.";
+            notificationProducer.sendEmailNotification(order.getUser().getEmail(), subject, body);
+        }
+
         return new OrderResponse(updatedOrder);
     }
 }
