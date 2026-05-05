@@ -34,6 +34,9 @@ public class ImageOrder {
     @Column(name = "external_payment_id")
     private String externalPaymentId;
 
+    @Column(name = "restored_storage_path")
+    private String restoredStoragePath;
+
     @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -60,4 +63,6 @@ public class ImageOrder {
     public void setPrice(java.math.BigDecimal price) { this.price = price; }
     public String getExternalPaymentId() { return externalPaymentId; }
     public void setExternalPaymentId(String externalPaymentId) { this.externalPaymentId = externalPaymentId; }
+    public String getRestoredStoragePath() { return restoredStoragePath; }
+    public void setRestoredStoragePath(String restoredStoragePath) { this.restoredStoragePath = restoredStoragePath; }
 }

@@ -36,4 +36,18 @@ public class S3Config {
                         .build())
                 .build();
     }
+
+    @Bean
+    public software.amazon.awssdk.services.s3.presigner.S3Presigner s3Presigner() {
+        return software.amazon.awssdk.services.s3.presigner.S3Presigner.builder()
+                .endpointOverride(URI.create(endpoint))
+                .region(Region.US_EAST_1)
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(accessKey, secretKey)
+                ))
+                .serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(true)
+                        .build())
+                .build();
+    }
 }
